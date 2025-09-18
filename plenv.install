@@ -1,0 +1,25 @@
+post_upgrade() {
+	usershell="$(su $SUDO_USER -c 'echo $SHELL')"
+	profileinstall_fmt="  ▷  echo '[[ -z "\$(which plenv)" ]] && eval "\$(plenv init -%s)"' >> %s\n"
+
+	echo "Run the following to finalize installation:"
+
+	if [[ "$usershell//*zsh/" ]]; then
+		sharg=zsh
+		outf=~/.zshrc
+	elif [[ "$usershell//*bash/" ]]; then
+	        sharg=""
+		outf=~/.bashrc
+	elif [[ "$usershell//*ksh/" ]]; then
+		sharg=""
+		outf=~/.kshrc
+	else
+		sharg=""
+		outf=~/.profile
+		>&2 echo "Current shell '$usershell' is not recognized. \
+			  Below is a generic command that may need modifying."
+	fi
+
+	printf "$profileinstall_fmt" "$sharg" "$outf" 
+}
+
