@@ -1,25 +1,41 @@
-post_upgrade() {
-	usershell="$(su $SUDO_USER -c 'echo $SHELL')"
-	profileinstall_fmt="  ▷  echo '[[ -z "\$(which plenv)" ]] && eval "\$(plenv init -%s)"' >> %s\n"
-
-	echo "Run the following to finalize installation:"
-
-	if [[ "$usershell//*zsh/" ]]; then
-		sharg=zsh
-		outf=~/.zshrc
-	elif [[ "$usershell//*bash/" ]]; then
-	        sharg=""
-		outf=~/.bashrc
-	elif [[ "$usershell//*ksh/" ]]; then
-		sharg=""
-		outf=~/.kshrc
-	else
-		sharg=""
-		outf=~/.profile
-		>&2 echo "Current shell '$usershell' is not recognized. \
-			  Below is a generic command that may need modifying."
-	fi
-
-	printf "$profileinstall_fmt" "$sharg" "$outf" 
+_notice() {
+	local fmtstr="$1"
+	shift
+  printf "\e[1;33m$fmtstr\e[0m\n" "$@"
 }
 
+post_install() {
+	[[ -z "$SUDO_USER" ]] && exit 1
+
+	passwd="$(getent passwd "$SUDO_USER")"
+  usershell="${passwd/#*:/}"
+
+	_notice "Run the following to finalize installation:"
+
+	if [[ -z "${usershell//*zsh/}" ]]; then
+		sharg="${usershell//*\//}"
+		outf=.zshrc
+	elif [[ -z "${usershell//*bash/}" ]]; then
+	  sharg=""
+		outf=.bashrc
+	elif [[ -z "${usershell//*ksh/}" ]]; then
+		sharg=""
+		outf=.kshrc
+	else
+		sharg=""
+		outf=.profile
+		>&2 _notice "\n!! Warning: current shell '%s' is not recognized." \
+		 "$usershell"
+		>&2 _notice "!! Below is a generic command that may need modifying:"
+	fi
+
+	installcmd="'${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh'"
+	installmsg="  echo -e $installcmd >> "~/$outf""
+	
+	_notice "%s\n" "$installmsg"
+}
+
+post_upgrade() {
+  [[ -n "$(which plenv)" ]] && return 0
+  post_install
+}
