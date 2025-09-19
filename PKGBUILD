@@ -1,12 +1,11 @@
 # Maintainer: Ian Bradley <crabapp@hikki.tech>
 pkgname=plenv-git
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=3
+pkgrel=1
 pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
 license=('GPL')
-#groups=(perl)
 depends=(perl)
 makedepends=(git)
 provides=("${pkgname%-git}")
