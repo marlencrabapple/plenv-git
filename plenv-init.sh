@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 [[ ${PLENV_DEBUG:-0} -ne 0 ]] && set -x
 
-if [ -z "${PLENV_DIR:-}" ]; then
+if [[ -z "${PLENV_DIR:-}" ]]; then
   PLENV_DIR="$HOME/.plenv"
 fi
 
@@ -16,12 +16,11 @@ if [[ ! -d "$PLENV_DIR" ]]; then
   done
 
   ln -s "/usr/share/plenv/libexec" "$PLENV_DIR/bin"
+  cp -vaf /usr/share/plenv/shims "$PLENV_DIR/shims"
 fi
 
-export PLENV_INIT="plenv init -${PLENV_SHELL:+ $PLENV_SHELL}"
-
 [[ -n "${PATH//*$PLENV_DIR*/}" ]] &&
-  export PATH="$HOME/.plenv/bin:$PATH" &&
-  eval "$($PLENV_INIT)"
-  
+  export PATH="$HOME/.plenv/shims:$HOME/.plenv/bin:$PATH" &&
+  eval "$(plenv init -)"
+
 [[ ${PLENV_DEBUG:-0} -ne 0 ]] && set +x

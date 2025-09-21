@@ -4,7 +4,14 @@ _notice() {
   printf "\e[1;33m$fmtstr\e[0m\n" "$@"
 }
 
+setx() {
+	set +x
+}
+
 post_install() {
+	[[ "${PLENV_DEBUG:-0}" -ne 0 ]] && set -x;
+	trap setx EXIT
+
 	[[ -z "$SUDO_USER" ]] && exit 1
 
 	passwd="$(getent passwd "$SUDO_USER")"
@@ -29,7 +36,7 @@ post_install() {
 		>&2 _notice "!! Below is a generic command that may need modifying:"
 	fi
 
-	installcmd="'${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh'"
+	installcmd="\"${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh\n\""
 	installmsg="  echo -e $installcmd >> "~/$outf""
 	
 	_notice "%s\n" "$installmsg"
