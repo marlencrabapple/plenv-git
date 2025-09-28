@@ -1,7 +1,7 @@
 # Maintainer: Ian Bradley <crabapp@hikki.tech>
 pkgname=plenv-git
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=2
+pkgrel=3
 pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
@@ -18,10 +18,10 @@ source=("git+$url.git#commit=$_commit"
         'plenv-init.sh')
 sha512sums=('bff48289cf965577203cba674f62a442dba63ff1c8c4ea0691b345f9219677f7a825bb46f451d82e535dfea377556dc410ffb2c4b229ec62d0ad365232cf52f0'
             'de0582f0b10ef3425a026fd7c1c1060840dd379438b576cc00fd9e8b13b544bb0a622f000d7ce327a1b5c739f8b4bf8909062046b8ee7f1b79209b341713ea2f'
-            'c9cbd465953c3326f138e9636545015b05dfda4c3dafd5a952df7275f2fc36b84eff1b98e349cf6e4975d80e041607e43b1764cab40afdaecf0d0f725fb91bd2')
+            '40a2395bc94f5652599e3a268985f7df6a5338eb4a99db0d9035b26cb1ebc29a34192aad540a4f33f80b3d1cafc4c30b5df962970ecb30cbeb073869f73e854e')
 b2sums=('54c57221a05e11e7fcdc7d1017939c2ef9480e0baa139d06c45597c4a202428d93f77c22e48d1acd02275d643b4855a2d304b30e0cff5bc25aaf10de1a966d9e'
         '2ba24ccd7141b748de94a2dcbb682301e816b1657cc44dfb1203d8287ca19bd22d79c61c60179ecaa42c368d12281405dcdb400af0f07e0fe140cf19e5b7826d'
-        '0e411294f7e194de109532554f2241a5a34abfe644027b374cf94ecb56c710d06162bf50da068f8f3dac2b6ba69320e92395eac927a8710b386f2bbb1e447f82')
+        '63d610f42b251d7bba2e1f9986a9508a7c81d76121d823857f8074401f1d9353c9554b6be140d7d440266f6c914bd28c2606e1c447fce9d1fa6adabd9f30f9d1')
 
 pkgver() {
   cd "$srcdir/${pkgname%-git}"
@@ -52,3 +52,4 @@ package() {
 	
   install -vDm644 -t "$pkgdir/usr/share/licenses/${pkgname%-git}" LICENSE
 }
+
