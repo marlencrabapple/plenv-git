@@ -6,7 +6,6 @@ pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
 license=('GPL')
-depends=(perl)
 makedepends=(git)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
@@ -48,7 +47,9 @@ package() {
   mkdir -p "$pkgdir/usr/bin"
 	
   cp -vafL ../"$(basename "$(pwd)")" "$pkgdir/usr/share"
-  cp -vafL ../plenv-init.sh "$pkgdir/usr/share/plenv/plenv-init.sh"
+  
+  cp -vafL ../${pkgname%-git}-init.sh \
+    "$pkgdir/usr/share/${pkgname%-git}/${pkgname%-git}-init.sh"
 	
   install -vDm644 -t "$pkgdir/usr/share/licenses/${pkgname%-git}" LICENSE
 }

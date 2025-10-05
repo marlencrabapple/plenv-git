@@ -16,7 +16,7 @@ if [[ ! -d "$PLENV_DIR" ]]; then
   done
 
   ln -s "/usr/share/plenv/libexec" "$PLENV_DIR/bin"
-  cp -vaf /usr/share/plenv/shims "$PLENV_DIR/shims"
+  cp -af /usr/share/plenv/shims "$PLENV_DIR/shims"
 fi
 
 [[ -n "${PATH//*$PLENV_DIR*/}" ]] &&
