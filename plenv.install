@@ -1,21 +1,73 @@
 _notice() {
 	local fmtstr="$1"
 	shift
-  printf "\e[1;33m$fmtstr\e[0m\n" "$@"
+	printf "\e[1;33m$fmtstr\e[0m\n" "$@"
 }
 
 setx() {
 	set +x
 }
 
+init() {
+	[[ ${PLENV_DEBUG:-0} -ne 0 ]] && set -x
+
+	if [[ -z "${PLENV_DIR:-}" ]]; then
+		PLENV_DIR="$HOME/.plenv"
+	fi
+
+	export PLENV_DIR
+	export PLENV_ROOT="$PLENV_DIR"
+
+	if [[ ! -d "$PLENV_DIR" ]]; then
+		mkdir "$PLENV_DIR"
+
+		for dir in /usr/share/plenv/{ext,plugins,libexec}; do
+			ln -s "$dir" "$PLENV_DIR/$(basename "$dir")"
+		done
+
+		ln -s "/usr/share/plenv/libexec" "$PLENV_DIR/bin"
+		cp -af /usr/share/plenv/shims "$PLENV_DIR/shims"
+	fi
+
+	[[ -n "${PATH//*$PLENV_DIR*/}" ]] &&
+		export PATH="$HOME/.plenv/shims:$HOME/.plenv/bin:$PATH" &&
+		eval "$(plenv init -)"
+
+	[[ ${PLENV_DEBUG:-0} -ne 0 ]] && set +x
+}
 post_install() {
-	[[ "${PLENV_DEBUG:-0}" -ne 0 ]] && set -x;
+	[[ "${PLENV_DEBUG:-0}" -ne 0 ]] && set -x
 	trap setx EXIT
 
 	[[ -z "$SUDO_USER" ]] && exit 1
 
 	passwd="$(getent passwd "$SUDO_USER")"
-  usershell="${passwd/#*:/}"
+	usershell="${passwd/#*:/}"
+	[[ ${PLENV_DEBUG:-0} -ne 0 ]] && set -x
+
+	if [[ -z "${PLENV_DIR:-}" ]]; then
+		PLENV_DIR="$HOME/.plenv"
+	fi
+
+	export PLENV_DIR
+	export PLENV_ROOT="$PLENV_DIR"
+
+	if [[ ! -d "$PLENV_DIR" ]]; then
+		mkdir "$PLENV_DIR"
+
+		for dir in /usr/share/plenv/{ext,plugins,libexec}; do
+			ln -s "$dir" "$PLENV_DIR/$(basename "$dir")"
+		done
+
+		ln -s "/usr/share/plenv/libexec" "$PLENV_DIR/bin"
+		cp -af /usr/share/plenv/shims "$PLENV_DIR/shims"
+	fi
+
+	[[ -n "${PATH//*$PLENV_DIR*/}" ]] &&
+		export PATH="$HOME/.plenv/shims:$HOME/.plenv/bin:$PATH" &&
+		eval "$(plenv init -)"
+
+	[[ "${PLENV_DEBUG:-0}" -ne 0 ]] && set +x
 
 	_notice "Run the following to finalize installation:"
 
@@ -23,7 +75,7 @@ post_install() {
 		sharg="${usershell//*\//}"
 		outf=.zshrc
 	elif [[ -z "${usershell//*bash/}" ]]; then
-	  sharg=""
+		sharg=""
 		outf=.bashrc
 	elif [[ -z "${usershell//*ksh/}" ]]; then
 		sharg=""
@@ -32,17 +84,18 @@ post_install() {
 		sharg=""
 		outf=.profile
 		>&2 _notice "\n!! Warning: current shell '%s' is not recognized." \
-		 "$usershell"
+			"$usershell"
 		>&2 _notice "!! Below is a generic command that may need modifying:"
 	fi
 
-	installcmd="\"${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh\n\""
-	installmsg="  echo -e $installcmd >> "~/$outf""
-	
+	#installcmd="\"${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh\n\""
+	installcmd="\$(plenv init -${sharg:+ $sharg})"
+	installmsg="  echo -e 'eval \"$installcmd\"' >> "~/$outf""
+
 	_notice "%s\n" "$installmsg"
 }
 
 post_upgrade() {
-  [[ -n "$(which plenv)" ]] && return 0
-  post_install
+	[[ -n "$(which plenv)" ]] && return 0
+	post_install
 }
