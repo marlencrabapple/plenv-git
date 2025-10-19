@@ -1,0 +1,28 @@
+pkgbase = perl-build-git
+	pkgdesc = Build system for PKGBUILD based Linux distributions
+	pkgver = 0.01.1
+	pkgrel = 1
+	url = https://github.com/tokuhirom/perl-build
+	arch = any
+	license = Artistic-1.0-Perl
+	license = GPL-1.0-or-later
+	makedepends = git
+	makedepends = perl-syntax-keyword-try
+	makedepends = perl-cpanel-json-xs
+	makedepends = perl-module-build
+	makedepends = perl-dbi
+	makedepends = cpanminus
+	makedepends = perl-inline-c
+	makedepends = perl-path-tiny
+	makedepends = perl-net-ssleay
+	makedepends = git
+	depends = perl
+	options = !emptydirs
+	options = staticlibs
+	source = git+https://github.com/tokuhirom/perl-build.git#commit=e56e4e44816cb1f9912bf560cc8b86bff609da68
+	source = 0001-fix-pinned-perl-and-refresh-build-scripts.patch
+	validpgpkeys = 4D8733704B740FC4B330EF5E8FFAD8B7BA73987
+	b2sums = 2ba24ccd7141b748de94a2dcbb682301e816b1657cc44dfb1203d8287ca19bd22d79c61c60179ecaa42c368d12281405dcdb400af0f07e0fe140cf19e5b7826d
+	b2sums = 491ccfbcb8af5f15ac4a84a29a640499b0b0414b513fa01cf68a4ab20a96d41e264ca71026d5106f536bbfa093062c1b7b5575a714c70eee1e53667b8a7f1cee
+
+pkgname = perl-build-git
