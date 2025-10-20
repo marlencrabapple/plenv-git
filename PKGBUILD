@@ -11,6 +11,7 @@ pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
 license=('GPL')
+#depends=(perl-build)
 makedepends=(git cpanminus)
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -23,9 +24,9 @@ source=("git+$url.git#commit=$_commit"
   "git+${url/%plenv/Perl-Build.git}#commit=$_perlbuild_commit")
 
 sha512sums=('bff48289cf965577203cba674f62a442dba63ff1c8c4ea0691b345f9219677f7a825bb46f451d82e535dfea377556dc410ffb2c4b229ec62d0ad365232cf52f0'
-  'de0582f0b10ef3425a026fd7c1c1060840dd379438b576cc00fd9e8b13b544bb0a622f000d7ce327a1b5c739f8b4bf8909062046b8ee7f1b79209b341713ea2f')
+            'de0582f0b10ef3425a026fd7c1c1060840dd379438b576cc00fd9e8b13b544bb0a622f000d7ce327a1b5c739f8b4bf8909062046b8ee7f1b79209b341713ea2f')
 b2sums=('54c57221a05e11e7fcdc7d1017939c2ef9480e0baa139d06c45597c4a202428d93f77c22e48d1acd02275d643b4855a2d304b30e0cff5bc25aaf10de1a966d9e'
-  '2ba24ccd7141b748de94a2dcbb682301e816b1657cc44dfb1203d8287ca19bd22d79c61c60179ecaa42c368d12281405dcdb400af0f07e0fe140cf19e5b7826d')
+        '2ba24ccd7141b748de94a2dcbb682301e816b1657cc44dfb1203d8287ca19bd22d79c61c60179ecaa42c368d12281405dcdb400af0f07e0fe140cf19e5b7826d')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -39,22 +40,24 @@ pkgver() {
 prepare() {
   cd "$srcdir/$_pkgname"
   export PERL5LIB="$(pwd)/local/lib/perl5"
+  export PERL_CPANM_OPT="--verbose --save-dists . -"
   git clone ../Perl-Build/ plugins/perl-build
 }
 
 _installdeps() {
+  _deps=("$@")
   cpanm --installdeps . -L"$PERL5LIB"
-  [[ -n "${*:0:1}" ]] && cpanm -L"$PERL5LIB" "$@"
-}
+  [[  "${#_deps[@]}" -ne 0 ]] && cpanm -L"$PERL5LIB" "${_deps[@]}"
+} 
 
 build() {
   set -x
   cd "$srcdir/$_pkgname"
 
-  _installdeps
-
   cd ./plugins/perl-build
-  _installdeps "App::cpm" "App::FatPacker::Simple" "Carton"
+  
+#  _installdeps "App::cpm" "App::FatPacker::Simple" "Carton"
+#  _installdeps
 
   perl Build.PL
   ./Build build
