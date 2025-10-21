@@ -6,12 +6,12 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=11
+pkgrel=12
 pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
 license=('GPL')
-#depends=(perl-build)
+depends=(perl-build)
 makedepends=(git cpanminus)
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -54,16 +54,8 @@ build() {
   set -x
   cd "$srcdir/$_pkgname"
 
-  cd ./plugins/perl-build
-  
-#  _installdeps "App::cpm" "App::FatPacker::Simple" "Carton"
-#  _installdeps
-
   perl Build.PL
   ./Build build
-
-  cd ./author
-  perl fatpack.pl --update
 }
 
 check() {
@@ -92,7 +84,7 @@ package() {
 
   install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 
-  cd ./plugins/perl-build
+  #cd ./plugins/perl-build
 
-  ./Build install --destdir="$pkgdir"
+  .#/Build install --destdir="$pkgdir"
 }
