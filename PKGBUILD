@@ -6,7 +6,7 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=13
+pkgrel=14
 pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
@@ -41,21 +41,21 @@ prepare() {
   cd "$srcdir/$_pkgname"
   export PERL5LIB="$(pwd)/local/lib/perl5"
   export PERL_CPANM_OPT="--verbose --save-dists . -"
-  git clone ../Perl-Build/ plugins/perl-build
+  #git clone ../Perl-Build/ plugins/perl-build
 }
 
-_installdeps() {
-  _deps=("$@")
-  cpanm --installdeps . -L"$PERL5LIB"
-  [[  "${#_deps[@]}" -ne 0 ]] && cpanm -L"$PERL5LIB" "${_deps[@]}"
-} 
+#_installdeps() {
+#  _deps=("$@")
+#  cpanm --installdeps . -L"$PERL5LIB"
+#  [[  "${#_deps[@]}" -ne 0 ]] && cpanm -L"$PERL5LIB" "${_deps[@]}"
+#} 
 
 build() {
   set -x
   cd "$srcdir/$_pkgname"
 
-  perl Build.PL
-  ./Build build
+  #perl Build.PL
+  #./Build build
 }
 
 check() {
