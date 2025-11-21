@@ -1,8 +1,4 @@
 # Maintainer: Ian Bradley <crabapp@hikki.tech>
-# Contributor: David Runge <dvzrv@archlinux.org>
-# Contributor: Carl Smedstad <carsme@archlinux.org>
-# Contributor: Carl Smedstad <carsme@archlinux.org>
-
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
