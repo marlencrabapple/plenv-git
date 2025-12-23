@@ -53,10 +53,10 @@ package() {
   set -x
 
   cd "$srcdir/$_pkgname"
-  install -vdm755 "$pkgdir/usr/lib/$_pkgname/plugins"
+  #install -vdm755 "$pkgdir/usr/lib/$_pkgname/plugins"
 
-  cp -vaf plugins "$pkgdir/usr/lib/$_pkgname/plugins"
-  chmod -R 755 "$pkgdir/usr/lib/$_pkgname/plugins"
+  #cp -vaf plugins "$pkgdir/usr/lib/$_pkgname/plugins"
+  #chmod -R 755 "$pkgdir/usr/lib/$_pkgname/plugins"
 
   install -vDm755 -t "$pkgdir/usr/lib/$_pkgname/libexec" libexec/*
   install -vDm644 -t "$pkgdir/usr/lib/$_pkgname/completions" completions/*
