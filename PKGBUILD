@@ -2,7 +2,7 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=4
+pkgrel=5
 epoch=1
 pkgdesc="Version manager for Perl 5 written in shell script"
 arch=(any)
