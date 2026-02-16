@@ -35,6 +35,7 @@ init() {
 
 	[[ ${PLENV_DEBUG:-0} -ne 0 ]] && set +x
 }
+
 post_install() {
 	[[ "${PLENV_DEBUG:-0}" -ne 0 ]] && set -x
 	trap setx EXIT
@@ -43,6 +44,7 @@ post_install() {
 
 	passwd="$(getent passwd "$SUDO_USER")"
 	usershell="${passwd/#*:/}"
+
 	[[ ${PLENV_DEBUG:-0} -ne 0 ]] && set -x
 
 	if [[ -z "${PLENV_DIR:-}" ]]; then
@@ -75,27 +77,36 @@ post_install() {
 		sharg="${usershell//*\//}"
 		outf=.zshrc
 	elif [[ -z "${usershell//*bash/}" ]]; then
-		sharg=""
-		outf=.bashrc
+		for rcfile in .bash_profile .profile; do
+			[[ -f /home/$SUDO_USER/$rcfile ]] && outf=$rcfile
+		done
+
+		[[ -z "${outf:-}" ]] && outf=.bashrc
 	elif [[ -z "${usershell//*ksh/}" ]]; then
-		sharg=""
 		outf=.kshrc
 	else
-		sharg=""
 		outf=.profile
+		
 		>&2 _notice "\n!! Warning: current shell '%s' is not recognized." \
 			"$usershell"
+
 		>&2 _notice "!! Below is a generic command that may need modifying:"
 	fi
 
+	# TODO: Either ask user to source init script or figure out why $HOME symlinked
+	# paths aren't resolving properly
+
 	#installcmd="\"${sharg:+export PLENV_SHELL=$sharg; }. /usr/share/plenv/plenv-init.sh\n\""
 	installcmd="\$(plenv init -${sharg:+ $sharg})"
-	installmsg="  echo -e 'eval \"$installcmd\"' >> "~/$outf""
+	
+	installmsg=("  echo 'export PATH=\"\$HOME/.plenv/bin:\$PATH\"' >> ~/$outf"
+		    "  echo -e 'eval \"$installcmd\"' >> ~/$outf")
 
-	_notice "%s\n" "$installmsg"
+	_notice "%s\n%s\n" "${installmsg[@]}"
 }
 
 post_upgrade() {
 	[[ -n "$(which plenv)" ]] && return 0
 	post_install
 }
+
