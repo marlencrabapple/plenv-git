@@ -3,13 +3,13 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=4
-pkgdesc="Version manager for Perl 5 written in shell script"
+pkgrel=5
+pkgdesc="Version manager for Perl 5 written in shell"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
 license=('GPL')
 depends=(perl-perl-build)
-makedepends=(git cpanminus)
+makedepends=(git cpanminus go-md2man)
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install="$_pkgname.install"
@@ -40,8 +40,7 @@ package() {
 
   install -vDm755 -t "$pkgdir/usr/lib/$_pkgname/libexec" libexec/*
   install -vDm644 -t "$pkgdir/usr/lib/$_pkgname/completions" completions/*
-  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
-  #install -vDm644 -t "$pkgdir/usr/share/man/man1" share/man/man1/
+  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" plenv.1 
   install -vdm755 "$pkgdir/usr/bin"
 
   ln -vs "/usr/lib/$_pkgname/libexec/$_pkgname" \
