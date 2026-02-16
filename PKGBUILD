@@ -40,7 +40,10 @@ package() {
 
   install -vDm755 -t "$pkgdir/usr/lib/$_pkgname/libexec" libexec/*
   install -vDm644 -t "$pkgdir/usr/lib/$_pkgname/completions" completions/*
+  
+  go-md2mad --in README.md --out plenv.1
   install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" plenv.1 
+  
   install -vdm755 "$pkgdir/usr/bin"
 
   ln -vs "/usr/lib/$_pkgname/libexec/$_pkgname" \
