@@ -43,13 +43,17 @@ package() {
   
   mkdir -p man/man1
 
-  perl -MText::Wrap -MFile::Basename -Mv5.40 -Mutf8 \
-    -e 'my $infn = shift @ARGV; \
-        open my $inh, "<:encoding(UTF-8)", $infn or die "$?: $!"; \
-	open my $outh, ">:encoding(UTF-8)", (basename($infn) =~ s/^(.+?)(\.[^.]+?)?$/$1.wrap$2/rgi) or die "$?: $!"; \
-	say $outh wrap("", "", (<$inh>));' README.md
+  _wrap='open my $inh, "<:encoding(UTF-8)", shift @ARGV; \
+       open my $outh, ">:encoding(UTF-8)", shift @ARGV; \
+       say $outh wrap("", "", (<$inh>));'
+  
+  _wrap=${_wrap//\\n/}
+  _wrap=${_wrap//\\/}
+       
+  perl -MText::Wrap -Mv5.40 -Mutf8 -Mautodie \
+   -e "$_wrap" ./README{-wrap76,}.md
 
-  go-md2man --in README.md --out man/man1/plenv.1
+  go-md2man --in README-wrap76.md --out man/man1/plenv.1
   bsdtar -cvf man/man1/plenv.1.gz man/man1/plenv.1
 
   install -vdm755 "$pkgdir/usr/share/man/man1"
