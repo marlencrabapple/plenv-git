@@ -3,7 +3,7 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=6
+pkgrel=7
 pkgdesc="Version manager for Perl 5 written in shell"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
@@ -51,7 +51,7 @@ package() {
   _wrap=${_wrap//\\/}
        
   perl -MText::Wrap -Mv5.40 -Mutf8 -Mautodie \
-   -e "$_wrap" ./README{-wrap76,}.md
+   -e "$_wrap" ./README{,-wrap76}.md
 
   go-md2man --in README-wrap76.md --out man/man1/plenv.1
   bsdtar -cvf man/man1/plenv.1.gz man/man1/plenv.1
