@@ -3,7 +3,7 @@
 _pkgname=plenv
 pkgname="$_pkgname-git"
 pkgver=1.4.4.r255.g3f29d0b
-pkgrel=5
+pkgrel=6
 pkgdesc="Version manager for Perl 5 written in shell"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
@@ -41,9 +41,20 @@ package() {
   install -vDm755 -t "$pkgdir/usr/lib/$_pkgname/libexec" libexec/*
   install -vDm644 -t "$pkgdir/usr/lib/$_pkgname/completions" completions/*
   
-  go-md2mad --in README.md --out plenv.1
-  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" plenv.1 
-  
+  mkdir -p man/man1
+
+  perl -MText::Wrap -MFile::Basename -Mv5.40 -Mutf8 \
+    -e 'my $infn = shift @ARGV; \
+        open my $inh, "<:encoding(UTF-8)", $infn or die "$?: $!"; \
+	open my $outh, ">:encoding(UTF-8)", (basename($infn) =~ s/^(.+?)(\.[^.]+?)?$/$1.wrap$2/rgi) or die "$?: $!"; \
+	say $outh wrap("", "", (<$inh>));' README.md
+
+  go-md2man --in README.md --out man/man1/plenv.1
+  bsdtar -cvf man/man1/plenv.1.gz man/man1/plenv.1
+
+  install -vdm755 "$pkgdir/usr/share/man/man1"
+  install -vDm644 man/man1/plenv.1{,.gz} "$pkgdir/usr/share/man/man1"
+  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md 
   install -vdm755 "$pkgdir/usr/bin"
 
   ln -vs "/usr/lib/$_pkgname/libexec/$_pkgname" \
