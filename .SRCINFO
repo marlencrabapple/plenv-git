@@ -1,7 +1,8 @@
 pkgbase = plenv-git
 	pkgdesc = Version manager for Perl 5 written in shell
 	pkgver = 1.4.4.r255.g3f29d0b
-	pkgrel = 7
+	pkgrel = 1
+	epoch = 1
 	url = https://github.com/tokuhirom/plenv
 	install = plenv.install
 	arch = any
