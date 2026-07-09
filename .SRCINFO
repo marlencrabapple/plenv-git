@@ -1,16 +1,15 @@
 pkgbase = plenv-git
 	pkgdesc = Version manager for Perl 5 written in shell
 	pkgver = 1.4.4.r255.g3f29d0b
-	pkgrel = 2
+	pkgrel = 3
 	epoch = 1
 	url = https://github.com/tokuhirom/plenv
 	install = plenv.install
 	arch = any
 	license = GPL
 	makedepends = git
-	makedepends = cpanminus
 	makedepends = go-md2man
-	depends = perl-perl-build
+	depends = perl-perl-build-git
 	provides = plenv
 	conflicts = plenv
 	source = git+https://github.com/tokuhirom/plenv.git#commit=3f29d0bc29d4d864bb6008808eb2014f83f31430
