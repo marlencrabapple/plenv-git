@@ -2,9 +2,9 @@
 
 _pkgname=plenv
 pkgname="$_pkgname-git"
-pkgver=1.4.4.r255.g3f29d0b
+pkgver=2.3.1.r14.3f29d0b
 epoch=1
-pkgrel=3
+pkgrel=1
 pkgdesc="Version manager for Perl 5 written in shell"
 arch=(any)
 url="https://github.com/tokuhirom/plenv"
@@ -20,12 +20,9 @@ sha512sums=('bff48289cf965577203cba674f62a442dba63ff1c8c4ea0691b345f9219677f7a82
 b2sums=('54c57221a05e11e7fcdc7d1017939c2ef9480e0baa139d06c45597c4a202428d93f77c22e48d1acd02275d643b4855a2d304b30e0cff5bc25aaf10de1a966d9e')
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
-  (
-    set -o pipefail
-    git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-      printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
-  )
+  cd "$srcdir/${pkgname%-git}"
+  printf "%s" "$(git describe --long --tags \
+	| perl -pe 's/^v?([^-]+)-([0-9]+)-g([a-z0-9]+)$/$1.r$2.$3/i')"
 }
 
 check() {
